@@ -32,6 +32,10 @@ module.exports = {
                 name,
                 email,
                 password: hash,
+                balance:0,
+                income: 0,
+                expense: 0,
+                transactions: []
               });
 
               user.save()
@@ -67,7 +71,11 @@ module.exports = {
                 let token = jwt.sign({
                     _id: user._id,
                     email: user.email,
-                    name: user.name
+                    name: user.name,
+                    amount: user.amount,
+                    income: user.income,
+                    expense: user.expense,
+                    transactions: user.transactions
                 }, process.env.SECRET, {expiresIn: '2h'});
 
                 res.status(200).json({
@@ -82,4 +90,17 @@ module.exports = {
         res.status(400).json(validate.error);
     }
   },
+  getAllUser(req, res){
+    User.find()
+      .then(user=>{
+        if(!user){
+          return res.status(400).json({
+            message: 'No User Registered'
+          })
+        }else{
+          return res.status(200).json(user)
+        }
+      })
+      .catch((err) => serverError(res, err))
+  }
 };

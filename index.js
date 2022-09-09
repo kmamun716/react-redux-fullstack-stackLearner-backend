@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const passport = require('passport');
 require("dotenv").config();
 
 const port = process.env.PORT || 4000;
@@ -10,8 +11,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//setup passport
+app.use(passport.initialize())
+require('./passport')(passport)
+
 //routes
 app.use('/api/user/', require('./routes/userRoute'));
+app.use('/api/transaction', require('./routes/transactionRoute'));
 
 app.get("/", (req, res) => {
   res.json({ message: "server is running" });
