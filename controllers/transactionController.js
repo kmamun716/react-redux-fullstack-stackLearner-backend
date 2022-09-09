@@ -4,7 +4,8 @@ const { serverError } = require("../utils/error");
 
 module.exports={
     getAllTransaction(req, res){
-        Transaction.find({})
+        const id = req.user._id;
+        Transaction.find({author: id})
             .then(transactions=>{
                 if(transactions.length === 0){
                     res.status(203).json({
